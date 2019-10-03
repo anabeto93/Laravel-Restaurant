@@ -9,6 +9,8 @@ $factory->define(Menu::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'description' => $faker->paragraphs(2, true),
-        'price' => rand(100, 999) / 2.5
+        'price' => rand(100, 999) / 2.5,
+        'restaurant_id' => 1,
+        'category_id' => 1,
     ];
 });
