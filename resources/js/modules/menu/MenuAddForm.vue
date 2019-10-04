@@ -43,22 +43,26 @@ export default {
     },
     data() {
         return {
-            food: {
-                name: '',
-                price: 10.99,
-                category: '',
-                restaurant_id: this.restaurantId,
-            },
+            food: this.emptyMenuItem(),
             menu: '',
         };
     },
     methods: {
+        emptyMenuItem() {
+            return {
+                name: '',
+                price: 10.99,
+                category: '',
+                restaurant_id: this.restaurantId,
+            };
+        },
         handleSubmit() {
-            console.log('form data', this.food)
+            // console.log('form data', this.food)
             axios.post('/menus', this.food)
             .then( (response) => {
-                console.log('response from adding new menu item', response.data)
+                // console.log('response from adding new menu item', response.data)
                 this.$emit('newMenuItemAdded', response.data, this.food.category)
+                this.food = this.emptyMenuItem();
             })
             .catch( (e) => {
                 console.error(e)

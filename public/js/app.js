@@ -1932,24 +1932,28 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      food: {
-        name: '',
-        price: 10.99,
-        category: '',
-        restaurant_id: this.restaurantId
-      },
+      food: this.emptyMenuItem(),
       menu: ''
     };
   },
   methods: {
+    emptyMenuItem: function emptyMenuItem() {
+      return {
+        name: '',
+        price: 10.99,
+        category: '',
+        restaurant_id: this.restaurantId
+      };
+    },
     handleSubmit: function handleSubmit() {
       var _this = this;
 
-      console.log('form data', this.food);
+      // console.log('form data', this.food)
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/menus', this.food).then(function (response) {
-        console.log('response from adding new menu item', response.data);
-
+        // console.log('response from adding new menu item', response.data)
         _this.$emit('newMenuItemAdded', response.data, _this.food.category);
+
+        _this.food = _this.emptyMenuItem();
       })["catch"](function (e) {
         console.error(e);
       });
