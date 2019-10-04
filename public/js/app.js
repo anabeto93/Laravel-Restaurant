@@ -1887,6 +1887,15 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1915,24 +1924,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['categories'],
+  props: ['categories', 'restaurantId'],
   components: {
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   },
   data: function data() {
     return {
       food: {
-        item: '',
+        name: '',
         price: 10.99,
-        category: ''
+        category: '',
+        restaurant_id: this.restaurantId
       },
       menu: ''
     };
   },
   methods: {
     handleSubmit: function handleSubmit() {
+      var _this = this;
+
       console.log('form data', this.food);
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/menus', this.food).then(function (response) {
+        console.log('response from adding new menu item', response.data);
+
+        _this.$emit('newMenuItemAdded', response.data, _this.food.category);
+      })["catch"](function (e) {
+        console.error(e);
+      });
     }
   }
 });
@@ -1982,12 +2002,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['items'],
+  props: ['items', 'restaurantId'],
   components: {
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_1___default.a,
     MenuGroups: _MenuGroups__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -1996,8 +2019,18 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       categories: [],
-      menu: ''
+      menu: '',
+      localItems: []
     };
+  },
+  methods: {
+    newItemHandler: function newItemHandler(data, category) {
+      console.log('New Item data received', data, category); //add to the list of localItems
+      //copy the category of any existing menu 
+
+      data.category = this.localItems[category][0].category;
+      this.localItems[category].unshift(data);
+    }
   },
   created: function created() {
     var _this = this;
@@ -2007,10 +2040,11 @@ __webpack_require__.r(__webpack_exports__);
     });
 
     this.menu = this.categories[0];
+    this.localItems = this.items;
   },
   computed: {
     currentMenuItems: function currentMenuItems() {
-      return this.items[this.menu];
+      return this.localItems[this.menu];
     }
   }
 });
@@ -37988,8 +38022,8 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.food.item,
-                expression: "food.item"
+                value: _vm.food.name,
+                expression: "food.name"
               }
             ],
             staticClass: "form-control",
@@ -37999,13 +38033,13 @@ var render = function() {
               id: "name",
               required: ""
             },
-            domProps: { value: _vm.food.item },
+            domProps: { value: _vm.food.name },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.$set(_vm.food, "item", $event.target.value)
+                _vm.$set(_vm.food, "name", $event.target.value)
               }
             }
           })
@@ -38059,6 +38093,39 @@ var render = function() {
                   return
                 }
                 _vm.$set(_vm.food, "price", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "description" } }, [
+            _vm._v("Description")
+          ]),
+          _vm._v(" "),
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.food.description,
+                expression: "food.description"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              id: "description",
+              placeholder: "Item Description",
+              required: "",
+              rows: "3"
+            },
+            domProps: { value: _vm.food.description },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.food, "description", $event.target.value)
               }
             }
           })
@@ -38152,7 +38219,13 @@ var render = function() {
                 "template",
                 { slot: "main" },
                 [
-                  _c("menu-add-form", { attrs: { categories: _vm.categories } })
+                  _c("menu-add-form", {
+                    attrs: {
+                      categories: _vm.categories,
+                      "restaurant-id": _vm.restaurantId
+                    },
+                    on: { newMenuItemAdded: _vm.newItemHandler }
+                  })
                 ],
                 1
               )
