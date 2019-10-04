@@ -1889,6 +1889,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_validation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/validation */ "./resources/js/utils/validation.js");
 //
 //
 //
@@ -1923,6 +1924,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1933,7 +1939,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       food: this.emptyMenuItem(),
-      menu: ''
+      validation: new _utils_validation__WEBPACK_IMPORTED_MODULE_2__["default"]()
     };
   },
   methods: {
@@ -1956,6 +1962,10 @@ __webpack_require__.r(__webpack_exports__);
         _this.food = _this.emptyMenuItem();
       })["catch"](function (e) {
         console.error(e);
+
+        if (e.response.status == 422) {
+          _this.validation.setMessages(e.response.data.errors);
+        }
       });
     }
   }
@@ -38046,6 +38056,11 @@ var render = function() {
                 _vm.$set(_vm.food, "name", $event.target.value)
               }
             }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "validation-message",
+            domProps: { textContent: _vm._s(_vm.validation.getMessage("name")) }
           })
         ]),
         _vm._v(" "),
@@ -38065,6 +38080,13 @@ var render = function() {
                   _vm.$set(_vm.food, "category", $$v)
                 },
                 expression: "food.category"
+              }
+            }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "validation-message",
+              domProps: {
+                textContent: _vm._s(_vm.validation.getMessage("category"))
               }
             })
           ],
@@ -38099,6 +38121,13 @@ var render = function() {
                 _vm.$set(_vm.food, "price", $event.target.value)
               }
             }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "validation-message",
+            domProps: {
+              textContent: _vm._s(_vm.validation.getMessage("price"))
+            }
           })
         ]),
         _vm._v(" "),
@@ -38131,6 +38160,13 @@ var render = function() {
                 }
                 _vm.$set(_vm.food, "description", $event.target.value)
               }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "validation-message",
+            domProps: {
+              textContent: _vm._s(_vm.validation.getMessage("description"))
             }
           })
         ]),
@@ -50856,6 +50892,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MenuGroups_vue_vue_type_template_id_707660cd___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MenuGroups_vue_vue_type_template_id_707660cd___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/utils/validation.js":
+/*!******************************************!*\
+  !*** ./resources/js/utils/validation.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Validation; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Validation =
+/*#__PURE__*/
+function () {
+  function Validation() {
+    _classCallCheck(this, Validation);
+
+    this.empty();
+  }
+
+  _createClass(Validation, [{
+    key: "getMessage",
+    value: function getMessage(field) {
+      if (this.messages[field]) {
+        return this.messages[field][0];
+      }
+    }
+  }, {
+    key: "setMessages",
+    value: function setMessages(messages) {
+      this.messages = messages;
+    }
+  }, {
+    key: "empty",
+    value: function empty() {
+      this.messages = {};
+    }
+  }]);
+
+  return Validation;
+}();
 
 
 

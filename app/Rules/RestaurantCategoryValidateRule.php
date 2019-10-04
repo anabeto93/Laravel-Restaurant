@@ -7,14 +7,15 @@ use Illuminate\Contracts\Validation\Rule;
 
 class RestaurantCategoryValidateRule implements Rule
 {
+    private $id;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($restaurant_id)
     {
-        //
+        $this->id = $restaurant_id;
     }
 
     /**
@@ -26,7 +27,7 @@ class RestaurantCategoryValidateRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $category = Category::where('name', $value)->first();
+        $category = Category::where('name', $value)->where('restaurant_id', $this->id)->first();
 
         return $category instanceof Category;
     }

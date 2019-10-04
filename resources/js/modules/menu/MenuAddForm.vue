@@ -5,6 +5,7 @@
                 <label for="name">Food Item</label>
                 <input type="text" class="form-control" placeholder="Enter food item name"
                     v-model="food.name" id="name" required>
+                <div class="validation-message" v-text="validation.getMessage('name')"></div>
             </div>
 
             <div class="form-group">
@@ -13,18 +14,21 @@
                     v-model="food.category"
                     :options="categories" id="category">
                 </multiselect>
+                <div class="validation-message" v-text="validation.getMessage('category')"></div>
             </div>
 
             <div class="form-group">
                 <label for="price">Price</label>
                 <input type="text" id="price" class="form-control" placeholder="Enter item price"
                     v-model="food.price" required>
+                <div class="validation-message" v-text="validation.getMessage('price')"></div>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea id="description" class="form-control" placeholder="Item Description"
                     v-model="food.description" required rows="3"></textarea>
+                <div class="validation-message" v-text="validation.getMessage('description')"></div>
             </div>
 
             <button class="btn btn-primary" type="submit">Save</button>
@@ -35,6 +39,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import axios from 'axios';
+import Validation from '../../utils/validation';
 
 export default {
     props: ['categories', 'restaurantId'],
@@ -44,7 +49,7 @@ export default {
     data() {
         return {
             food: this.emptyMenuItem(),
-            menu: '',
+            validation: new Validation()
         };
     },
     methods: {
@@ -66,6 +71,10 @@ export default {
             })
             .catch( (e) => {
                 console.error(e)
+
+                if (e.response.status == 422) {
+                    this.validation.setMessages(e.response.data.errors)
+                }
             })
         }
     }

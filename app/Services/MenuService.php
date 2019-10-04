@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 
 class MenuService
 {
-    public function getMenuWithCategories(array $restaurants)
+    public function getMenuWithCategories($restaurant)
     {
 
-        $categories = Menu::whereIn('restaurant_id', $restaurants)->get()
+        $categories = Menu::where('restaurant_id', $restaurant)->get()
             ->groupBy('category.name');
 
         return $categories;

@@ -34,7 +34,7 @@ class CreateMenuFormRequest extends FormRequest
             'description' => ['bail','required', 'string','min:10'],
             'restaurant_id' => ['required', 'numeric'],
             'price' => ['required', 'numeric'],
-            'category' => ['required', new RestaurantCategoryValidate()]
+            'category' => ['required', new RestaurantCategoryValidate(request('restaurant_id'))]
         ];
     }
 }
